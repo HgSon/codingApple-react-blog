@@ -7,9 +7,13 @@ div {
 }
 
 .list {
-  pedding-left: 20px;
+  padding-left: 20px;
   text-align: center;
   border-bottom: 1px solid grey;
+}
+
+.list span {
+  cursor: pointer;
 }
 
 .black-nav {
