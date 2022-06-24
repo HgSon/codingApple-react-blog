@@ -8,15 +8,35 @@ function App() {
 
 	const logo = "ReactBlog";
 
-	let [titles, setTitle] = useState(["여자 코트 추천", "역삼 맛집 모음", "파이썬 블로그"]);
-	let [dates, setDate] = useState(["6월 24일", "6월 25일", "7월 8일"]);
-    let [likes, setLikes] = useState([0, 0, 0]);
+    let [posts, setPosts] = useState([{id: 1, title: "여자 코트 추천", date: "6월 24일", like: 0},
+	    {id: 2, title: "강남 맛집 모음", date: "6월 25일", like: 0},
+	    {id: 3, title: "파이썬 블로그", date: "7월 8일", like: 0},
+    ])
 
-    const handleClick = (index) => {
-    	let newLikes = [...likes];
-    	newLikes[index]++;
-    	setLikes(newLikes)
+    const increaseLikeCount = (id) => {
+    	let newPosts = [...posts].map(post => (post.id === id ? {...post, like: ++post.like} : post ));
+	    setPosts(newPosts);
 
+    }
+
+    const sortTitle = () => {
+    	let newPosts = [...posts].sort((a, b) => {
+    		if (a.title > b.title) {
+    			return 1;
+		    }
+
+    		if (a.title < b.title) {
+    			return -1;
+		    }
+    		return 0;
+	    })
+    	setPosts(newPosts)
+
+    }
+
+    const changeTitle = () => {
+	    let newPosts = [...posts].map((post, index) => (index === 0? {...post, title: "남자 코트 추천"} : post))
+	    setPosts(newPosts);
     }
 
 
@@ -26,11 +46,20 @@ function App() {
 				<h4>{logo}</h4>
 			</div>
 
-			<button onClick={() => setTitle([...titles].map((title, index) => index === 0? "남자 코트 추천" : title))}>글수정</button>
-			{titles.map((title, index) => (
-				<div className="list" key={title}>
-					<h4>{title} <span onClick={() => handleClick(index)}>👍</span> {likes[index]} </h4>
-					<p>{dates[index]} 발행</p>
+			<button onClick={changeTitle}>
+				글수정
+			</button>
+			<button onClick={sortTitle}>
+				가나다순정렬
+			</button>
+			{posts.map((post) => (
+				<div className="list" key={post.id}>
+					<h4>
+						{post.title}
+						<span onClick={() => increaseLikeCount(post.id)}>👍</span>
+						{post.like}
+					</h4>
+					<p>{post.date} 발행</p>
 				</div>
 			))}
 		</div>
