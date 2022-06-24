@@ -1,17 +1,27 @@
 import logo from './logo.svg';
 import './App.css';
-import React from "react";
+import React, {useState} from "react";
+
 
 function App() {
 
-  let post = "강남 우동 맛집";
+  const logo = "ReactBlog";
+
+  let [titles, setTitle] = useState(["여자 코트 추천", "역삼 맛집 모음", "파이썬 블로그"]);
+  let [dates, setDate] = useState(["6월 24일", "6월 25일", "7월 8일"])
+
 
   return (
     <div className="App">
       <div className="black-nav">
-          <h4>블로그임</h4>
+          <h4>{ logo }</h4>
       </div>
-      <h4 style={{color: "red", fontSize: "16px"} }>{ post }</h4>
+        {titles.map((title, index) => (
+            <div className="list">
+                <h4>{ title }</h4>
+                <p>{dates[index]} 발행</p>
+            </div>
+        ))}
     </div>
   );
 }

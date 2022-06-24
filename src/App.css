@@ -2,6 +2,16 @@
   text-align: center;
 }
 
+div {
+  box-sizing: border-box;
+}
+
+.list {
+  pedding-left: 20px;
+  text-align: center;
+  border-bottom: 1px solid grey;
+}
+
 .black-nav {
   display: flex;
   width: 100%;
