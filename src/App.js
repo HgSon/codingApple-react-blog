@@ -25,6 +25,8 @@ function App() {
 			<div className="black-nav">
 				<h4>{logo}</h4>
 			</div>
+
+			<button onClick={() => setTitle([...titles].map((title, index) => index === 0? "남자 코트 추천" : title))}>글수정</button>
 			{titles.map((title, index) => (
 				<div className="list" key={title}>
 					<h4>{title} <span onClick={() => handleClick(index)}>👍</span> {likes[index]} </h4>
