@@ -13,7 +13,7 @@ function App() {
 	    {id: 3, title: "파이썬 블로그", date: "7월 8일", like: 0},
     ])
 
-	let [modal, setModal] = useState(false);
+	let [modal, setModal] = useState(-1);
 
     const increaseLikeCount = (id) => {
     	let newPosts = [...posts].map(post => (post.id === id ? {...post, like: ++post.like} : post ));
@@ -21,8 +21,11 @@ function App() {
 
     }
 
-    const showModal = () => {
-	    setModal((modal) => !modal)
+    const showModal = (index) => {
+	    //setModal((modal) => !modal)
+	    //setState처럼 state 받는 리턴값있는 함수 사용가능한듯. 리턴한 값이 setModal에 적용될 값이 되는 것 같다. props도 마찬가지로 받을 수 있는지 확인하기.
+
+	    setModal((modal) => modal === index ? -1 : index);
     }
 
     const sortTitle = () => {
@@ -58,11 +61,12 @@ function App() {
 			<button onClick={sortTitle}>
 				가나다순정렬
 			</button>
-			{posts.map((post) => (<Post post={post} handleLikeClick={increaseLikeCount}
-			                            handleTitleClick={showModal} key={post.id}/>
+			{posts.map((post, index) => (
+				<Post post={post} order={index} handleLikeClick={increaseLikeCount}
+			          handleTitleClick={showModal} key={post.id}/>
 
 			))}
-			{ modal ? <Modal /> : null }
+			{ modal === -1 ? null  : <Modal title={posts[modal].title} date={posts[modal].date}/>}
 		</div>
 	);
 }
@@ -71,7 +75,7 @@ function Post(props) {
 	return (
 		<div className="list">
 			<h4>
-				<span onClick={props.handleTitleClick}>
+				<span onClick={() => props.handleTitleClick(props.order)}>
 				{props.post.title}
 				</span>
 				<span onClick={() => props.handleLikeClick(props.post.id)}>👍</span>
@@ -82,11 +86,11 @@ function Post(props) {
 	)
 }
 
-function Modal() {
+function Modal(props) {
 	return (
 		<div className="modal">
-			<h4>제목</h4>
-			<p>날짜</p>
+			<h4>{props.title}</h4>
+			<p>{props.date}</p>
 			<p>상세내용</p>
 		</div>
 	)
