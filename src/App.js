@@ -2,18 +2,23 @@
 
 import './App.css';
 import React, {useState} from "react";
+import {Modal} from "./Modal";
+import {Post} from "./Post";
 
 
 function App() {
 
 	const logo = "ReactBlog";
 
-    let [posts, setPosts] = useState([{id: 1, title: "여자 코트 추천", date: "6월 24일", like: 0},
-	    {id: 2, title: "강남 맛집 모음", date: "6월 25일", like: 0},
-	    {id: 3, title: "파이썬 블로그", date: "7월 8일", like: 0},
+    let [posts, setPosts] = useState([{id: 1, title: "여자 코트 추천", date: "2022-06-24", like: 0},
+	    {id: 2, title: "강남 맛집 모음", date: "2022-06-25", like: 0},
+	    {id: 3, title: "파이썬 블로그", date: "2022-07-08", like: 0},
     ])
 
 	let [modal, setModal] = useState(-1);
+    let [postId, setPostId] = useState(posts.reduce((prevId, currentPost) => (prevId < currentPost.id) ? currentPost.id : prevId, 0));
+    let [inputTitle, setInputTitle] = useState("");
+    let [inputDate, setInputDate] = useState("");
 
     const increaseLikeCount = (id) => {
     	let newPosts = [...posts].map(post => (post.id === id ? {...post, like: ++post.like} : post ));
@@ -49,6 +54,17 @@ function App() {
 	    setPosts(() => newPosts);
     }
 
+    const deletePost = (id) => {
+    	let newPost = [...posts].filter( post => post.id !== id );
+    	setPosts(() => newPost);
+    }
+    
+    const savePost = () => {
+    	const newId = postId + 1;
+    	setPosts([...posts, {id: newId, title: inputTitle, date: inputDate, like: 0}]);
+    	setPostId(newId);
+    }
+
 
 	return (
 		<div className="App">
@@ -61,40 +77,18 @@ function App() {
 			</button>
 			{posts.map((post, index) => (
 				<Post post={post} order={index} handleLikeClick={increaseLikeCount}
-			          handleTitleClick={showModal} key={post.id}/>
-
+			          handleTitleClick={showModal} deletePost={deletePost} key={post.id}/>
 			))}
-			{ modal === -1 ? null  : <Modal title={posts[modal].title} date={posts[modal].date} changeTitle={changeTitle}/>}
+			<div>
+				<input type="text" placeholder="title" onChange={(e) => { setInputTitle(e.target.value) }}/>
+				<input type="date" onChange={(e) => { setInputDate(e.target.value) }} />
+				<button onClick={savePost}>글 작성</button>
+			</div>
+			{ modal === -1
+				? null
+				: <Modal title={posts[modal].title} date={posts[modal].date} changeTitle={changeTitle}/>}
 		</div>
 	);
-}
-
-function Post(props) {
-	return (
-		<div className="list">
-			<h4>
-				<span onClick={() => props.handleTitleClick(props.order)}>
-				{props.post.title}
-				</span>
-				<span onClick={() => props.handleLikeClick(props.post.id)}>👍</span>
-				{props.post.like}
-			</h4>
-			<p>{props.post.date} 발행</p>
-		</div>
-	)
-}
-
-function Modal(props) {
-	return (
-		<div className="modal">
-			<h4>{props.title}</h4>
-			<p>{props.date}</p>
-			<p>상세내용</p>
-			<button onClick={props.changeTitle}>
-				글수정
-			</button>
-		</div>
-	)
 }
 
 export default App;
