@@ -44,8 +44,9 @@ function App() {
     }
 
     const changeTitle = () => {
-	    let newPosts = [...posts].map((post, index) => (index === 0? {...post, title: "남자 코트 추천"} : post))
-	    setPosts(newPosts);
+    	const newTitle = posts[0].title === "남자 코트 추천" ? "여자 코트 추천" : "남자 코트 추천";
+	    let newPosts = [...posts].map((post, index) => (index === 0? {...post, title: newTitle} : post))
+	    setPosts(() => newPosts);
     }
 
 
@@ -55,9 +56,6 @@ function App() {
 				<h4>{logo}</h4>
 			</div>
 
-			<button onClick={changeTitle}>
-				글수정
-			</button>
 			<button onClick={sortTitle}>
 				가나다순정렬
 			</button>
@@ -66,7 +64,7 @@ function App() {
 			          handleTitleClick={showModal} key={post.id}/>
 
 			))}
-			{ modal === -1 ? null  : <Modal title={posts[modal].title} date={posts[modal].date}/>}
+			{ modal === -1 ? null  : <Modal title={posts[modal].title} date={posts[modal].date} changeTitle={changeTitle}/>}
 		</div>
 	);
 }
@@ -92,6 +90,9 @@ function Modal(props) {
 			<h4>{props.title}</h4>
 			<p>{props.date}</p>
 			<p>상세내용</p>
+			<button onClick={props.changeTitle}>
+				글수정
+			</button>
 		</div>
 	)
 }
