@@ -13,10 +13,16 @@ function App() {
 	    {id: 3, title: "파이썬 블로그", date: "7월 8일", like: 0},
     ])
 
+	let [modal, setModal] = useState(false);
+
     const increaseLikeCount = (id) => {
     	let newPosts = [...posts].map(post => (post.id === id ? {...post, like: ++post.like} : post ));
 	    setPosts(newPosts);
 
+    }
+
+    const showModal = () => {
+	    setModal((modal) => !modal)
     }
 
     const sortTitle = () => {
@@ -52,10 +58,11 @@ function App() {
 			<button onClick={sortTitle}>
 				가나다순정렬
 			</button>
-			{posts.map((post) => (<Post post={post} handleClick={increaseLikeCount} key={post.id}/>
+			{posts.map((post) => (<Post post={post} handleLikeClick={increaseLikeCount}
+			                            handleTitleClick={showModal} key={post.id}/>
 
 			))}
-			<Modal />
+			{ modal ? <Modal /> : null }
 		</div>
 	);
 }
@@ -64,8 +71,10 @@ function Post(props) {
 	return (
 		<div className="list">
 			<h4>
+				<span onClick={props.handleTitleClick}>
 				{props.post.title}
-				<span onClick={() => props.handleClick(props.post.id)}>👍</span>
+				</span>
+				<span onClick={() => props.handleLikeClick(props.post.id)}>👍</span>
 				{props.post.like}
 			</h4>
 			<p>{props.post.date} 발행</p>
@@ -75,7 +84,6 @@ function Post(props) {
 
 function Modal() {
 	return (
-
 		<div className="modal">
 			<h4>제목</h4>
 			<p>날짜</p>
