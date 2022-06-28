@@ -52,18 +52,36 @@ function App() {
 			<button onClick={sortTitle}>
 				가나다순정렬
 			</button>
-			{posts.map((post) => (
-				<div className="list" key={post.id}>
-					<h4>
-						{post.title}
-						<span onClick={() => increaseLikeCount(post.id)}>👍</span>
-						{post.like}
-					</h4>
-					<p>{post.date} 발행</p>
-				</div>
+			{posts.map((post) => (<Post post={post} handleClick={increaseLikeCount} key={post.id}/>
+
 			))}
+			<Modal />
 		</div>
 	);
+}
+
+function Post(props) {
+	return (
+		<div className="list">
+			<h4>
+				{props.post.title}
+				<span onClick={() => props.handleClick(props.post.id)}>👍</span>
+				{props.post.like}
+			</h4>
+			<p>{props.post.date} 발행</p>
+		</div>
+	)
+}
+
+function Modal() {
+	return (
+
+		<div className="modal">
+			<h4>제목</h4>
+			<p>날짜</p>
+			<p>상세내용</p>
+		</div>
+	)
 }
 
 export default App;
