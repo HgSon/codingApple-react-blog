@@ -4,25 +4,26 @@ import './App.css';
 import React, {useState} from "react";
 import {Modal} from "./Modal";
 import {Post} from "./Post";
+import {Profile} from "./Profile";
 
 
 function App() {
 
 	const logo = "ReactBlog";
 
-    let [posts, setPosts] = useState([{id: 1, title: "여자 코트 추천", date: "2022-06-24", like: 0},
-	    {id: 2, title: "강남 맛집 모음", date: "2022-06-25", like: 0},
-	    {id: 3, title: "파이썬 블로그", date: "2022-07-08", like: 0},
+    let [posts, setPosts] = useState([{id: 1, title: "여자 코트 추천", date: "2022. 6. 24", like: 0},
+	    {id: 2, title: "강남 맛집 모음", date: "2022. 6. 25", like: 0},
+	    {id: 3, title: "파이썬 블로그", date: "2022. 7. 8", like: 0},
     ])
 
 	let [modal, setModal] = useState(-1);
     let [postId, setPostId] = useState(posts.reduce((prevId, currentPost) => (prevId < currentPost.id) ? currentPost.id : prevId, 0));
     let [inputTitle, setInputTitle] = useState("");
-    let [inputDate, setInputDate] = useState("");
+    // let [inputDate, setInputDate] = useState("");
 
     const increaseLikeCount = (id) => {
     	let newPosts = [...posts].map(post => (post.id === id ? {...post, like: ++post.like} : post ));
-	    setPosts(newPosts);
+	    setPosts(() => newPosts);
 
     }
 
@@ -60,8 +61,12 @@ function App() {
     }
     
     const savePost = () => {
+    	if (inputTitle === "") {
+    		alert("제목을 입력해 주세요");
+    		return;
+	    }
     	const newId = postId + 1;
-    	setPosts([...posts, {id: newId, title: inputTitle, date: inputDate, like: 0}]);
+    	setPosts([...posts, {id: newId, title: inputTitle, date: new Date().toLocaleDateString(), like: 0}]);
     	setPostId(newId);
     }
 
@@ -81,12 +86,14 @@ function App() {
 			))}
 			<div>
 				<input type="text" placeholder="title" onChange={(e) => { setInputTitle(e.target.value) }}/>
-				<input type="date" onChange={(e) => { setInputDate(e.target.value) }} />
+				{/*<input type="date" onChange={(e) => { setInputDate(e.target.value) }} />*/}
 				<button onClick={savePost}>글 작성</button>
 			</div>
 			{ modal === -1
 				? null
 				: <Modal title={posts[modal].title} date={posts[modal].date} changeTitle={changeTitle}/>}
+
+			<Profile/>
 		</div>
 	);
 }
